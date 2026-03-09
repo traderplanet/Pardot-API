@@ -183,7 +183,7 @@
                 } catch (Exception $e) {
                     if ($this->api->getDebug() === true) {
                         $exceptionHandler = $this->api->getExceptionHandler();
-                        return (new $exceptionHandler($e))();
+                        return new $exceptionHandler($e)();
                     }
                 }
             }
