@@ -35,9 +35,9 @@ class EmailQuery extends Query
      *
      * required: user_key, api_key, list_email_id
      *
-     * @return \stdClass|null
+     * @return array|null
      */
-    public function stats(int $id):? \stdClass
+    public function stats(int $id):? array
     {
         return $this->setOperator(sprintf('stats/id/%s', $id))->request('stats');
     }
@@ -50,13 +50,14 @@ class EmailQuery extends Query
      * required: user_key, api_key, campaign_id, (email_template_id OR (text_content, name, subject, & ((from_email & from_name) OR from_user_id)))
      *
      * @param integer $id
-     * @param array $params
-     * @return \stdClass|null
+     * @param array   $params
+     *
+     * @return array|null
      * @todo validate passed params
      */
-    public function sendToID(int $id, array $params):? \stdClass
+    public function sendToID(int $id, array $params):? array
     {
-        return $this->setOperator(sprintf('send/prospect_id/%s', $id))->request('email');
+        return $this->setOperator(sprintf('send/prospect_id/%s', $id))->setData($params)->request('email');
     }
 
     /**
@@ -67,13 +68,16 @@ class EmailQuery extends Query
      * required: user_key, api_key, campaign_id, (email_template_id OR (text_content, name, subject, & ((from_email & from_name) OR from_user_id)))
      *
      * @param string $email
-     * @param array $params
+     * @param array  $params
+     *
      * @return array|null
      * @todo validate passed params
      */
-    public function sendToEmail(string $email, array $params)
+    public function sendToEmail(string $email, array $params):? array
     {
-        return $this->setOperator(sprintf('send/prospect_email/%s', $id))->request('email');
+        return $this->setOperator(sprintf('send/prospect_email/%s', $email))
+                    ->setData($params)
+                    ->request('email');
     }
 
     /**
@@ -83,13 +87,15 @@ class EmailQuery extends Query
      *
      * required: user_key, api_key, list_ids[], campaign_id, (email_template_id OR (text_content, name, subject, & ((from_email & from_name) OR from_user_id)))
      *
-     * @param string $email
      * @param array $params
+     *
      * @return array|null
      * @todo validate passed params
      */
-    public function send(array $params)
+    public function send(array $params):? array
     {
-        return $this->setOperator('send')->request('email');
+        return $this->setOperator('send')
+                    ->setData($params)
+                    ->request('email');
     }
 }
